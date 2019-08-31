@@ -32,8 +32,8 @@ pipeline {
     }
     post { 
         always { 
-            echo 'Pipeine for worker is complete..'
             archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+            echo 'Pipeine for worker is complete..'
         }
     }
 }
