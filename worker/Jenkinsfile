@@ -4,7 +4,10 @@ pipeline {
         maven 'Maven 3.6.1' 
     }
     stages {
-        stage('build') { 
+        stage('build') {
+            when{
+                changeset "**/worker/**"
+            }
             steps {
                 echo 'Compiling worker app'
                 dir('worker'){
@@ -12,23 +15,35 @@ pipeline {
                 }
             }
         }
-        stage('test') { 
+        stage('test') {
+            when{
+                changeset "**/worker/**"
+            }
             steps {
                 echo 'Running unit Tests on worker app'
-                
+                dir('worker'){
+                    sh 'mvn clean test'
+                }
             }
         }
-        stage('package') { 
+        stage('package') {
+            when{
+                branch 'master'
+                changeset "**/worker/**"
+            }
             steps {
                 echo 'packging worker app'
-                
+                dir('worker'){
+                    sh 'mvn package -DskipTests'
+                    archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+                }
             }
         }
         
     }
     post { 
         always { 
-            echo 'Build pipeine for worker is complete..'
+            echo 'Pipeine for worker is complete..'
         }
     }
 }
