@@ -3,6 +3,7 @@ pipeline {
     tools {
         nodejs 'NodeJS 8.9.0' 
     }
+
     stages {
         stage('build') {
             when{
@@ -22,10 +23,7 @@ pipeline {
             steps {
                 echo 'Running unit Tests on result app'
                 dir('result'){
-                    sh '''
-                       npm install
-                       npm test
-                    '''
+                    sh 'npm test'
                 }
             }
         }
